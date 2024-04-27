@@ -5,5 +5,7 @@ const controller = new Controller();
 const router = Router();
 
 router.get('/cards', controller.fetchCardsData);
+router.get('/limitedCards', controller.fetch50CardsData);
+router.post('/cards', controller.saveCardsData);
 
 export default router;

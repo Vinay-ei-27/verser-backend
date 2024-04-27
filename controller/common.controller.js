@@ -20,6 +20,51 @@ class Controller {
       });
     }
   };
+
+  fetch50CardsData = (req, res) => {
+    try {
+      const crud = new Crud(getDBRefVerseApp);
+      const { startAfter, limit } = req.query;
+
+      crud.getChunksAsync('/cards', startAfter, limit, (error, data) => {
+        if (error) return res.status(401).json({ status: 401, message: MESSAGE['401'], errorCode: ERROR_CODES.UNAUTHORIZED });
+        if (!data) return res.status(404).json({ status: 404, message: MESSAGE['404'], errorCode: ERROR_CODES.DATA_NOT_FOUND });
+
+        const hasMoreData = Object.keys(data).length === limit;
+        const nextStartAfter = hasMoreData ? Object.keys(data).pop() : undefined;
+        res.status(200).json({ data, hasMoreData, nextStartAfter });
+      });
+    } catch (error) {
+      return res.status(error.status || 500).json({
+        status: error.status || 500,
+        message: error.message || MESSAGE['500'],
+        errorCode: error.errorCode || ERROR_CODES.SERVER_ERROR,
+      });
+    }
+  };
+
+  saveCardsData = (req, res) => {
+    try {
+      const crud = new Crud(getDBRefVerseApp);
+      const { cardsData } = req.body;
+      if (!cardsData) return res.status(400).json({ status: 400, message: MESSAGE['400'], errorCode: ERROR_CODES.MISSING_PARAMS });
+      let cardsArray = [];
+      for (let i = 0; i < 200; i++) {
+        cardsArray.push(cardsData);
+      }
+
+      crud.updateValueAsync('/cards', cardsArray, (error) => {
+        if (error) return res.status(401).json({ status: 401, message: 'Unauthorized' });
+        res.json({ status: 200, message: 'Cards data stored successfully' });
+      });
+    } catch (error) {
+      return res.status(error.status || 500).json({
+        status: error.status || 500,
+        message: error.message || MESSAGE['500'],
+        errorCode: error.errorCode || ERROR_CODES.SERVER_ERROR,
+      });
+    }
+  };
 }
 
 export default Controller;

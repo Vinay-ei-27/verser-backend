@@ -10,6 +10,7 @@ initializeFirebaseApp();
 
 const app = express();
 app.use(cors());
+app.use(express.json({ limit: '100mb', extended: true }));
 
 //routes
 app.use('/api', commonRoute);
