@@ -26,11 +26,11 @@ class Controller {
       const crud = new Crud(getDBRefVerseApp);
       const { startAfter, limit } = req.query;
 
-      crud.getChunksAsync('/cards', startAfter, limit, (error, data) => {
+      crud.getChunksAsync('/cards', +startAfter, +limit, (error, data) => {
         if (error) return res.status(401).json({ status: 401, message: MESSAGE['401'], errorCode: ERROR_CODES.UNAUTHORIZED });
         if (!data) return res.status(404).json({ status: 404, message: MESSAGE['404'], errorCode: ERROR_CODES.DATA_NOT_FOUND });
 
-        const hasMoreData = Object.keys(data).length === limit;
+        const hasMoreData = Object.keys(data).length === +limit;
         const nextStartAfter = hasMoreData ? Object.keys(data).pop() : undefined;
         res.status(200).json({ data, hasMoreData, nextStartAfter });
       });
