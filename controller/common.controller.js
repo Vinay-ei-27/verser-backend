@@ -64,12 +64,8 @@ class Controller {
       const crud = new Crud(getDBRefVerseApp);
       const { cardsData } = req.body;
       if (!cardsData) return res.status(400).json({ status: 400, message: MESSAGE['400'], errorCode: ERROR_CODES.MISSING_PARAMS });
-      let cardsArray = [];
-      for (let i = 0; i < 200; i++) {
-        cardsArray.push(cardsData);
-      }
 
-      crud.updateValueAsync('/cards', cardsArray, (error) => {
+      crud.updateValueAsync('/cards', cardsData, (error) => {
         if (error) return res.status(401).json({ status: 401, message: 'Unauthorized' });
         res.json({ status: 200, message: 'Cards data stored successfully' });
       });
