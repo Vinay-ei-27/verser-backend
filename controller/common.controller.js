@@ -3,6 +3,22 @@ import Crud from '../utils/crud.utils.js';
 import { ERROR_CODES, MESSAGE } from '../global/global.vars.js';
 
 class Controller {
+  home = (req, res) => {
+    try {
+      if (req.user) {
+        res.send(`Welcome, ${req.user.displayName}!`);
+      } else {
+        res.redirect('/login/google');
+      }
+    } catch (error) {
+      return res.status(error.status || 500).json({
+        status: error.status || 500,
+        message: error.message || MESSAGE['500'],
+        errorCode: error.errorCode || ERROR_CODES.SERVER_ERROR,
+      });
+    }
+  };
+
   fetchCardsData = (req, res) => {
     try {
       const crud = new Crud(getDBRefVerseApp);

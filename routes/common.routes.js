@@ -4,6 +4,7 @@ const controller = new Controller();
 
 const router = Router();
 
+router.get('/home', controller.home);
 router.get('/cards', controller.fetchCardsData);
 router.get('/limitedCards', controller.fetch50CardsData);
 router.post('/cards', controller.saveCardsData);
