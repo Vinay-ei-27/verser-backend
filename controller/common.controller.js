@@ -6,7 +6,7 @@ class Controller {
   home = (req, res) => {
     try {
       if (req.user) {
-        res.send(`Welcome, ${req.user.displayName}!`);
+        res.send(`Welcome, ${capitalizeFirstLetter(req.user.displayName)}!`);
       } else {
         res.redirect('/login/google');
       }
@@ -22,7 +22,7 @@ class Controller {
   fetchCardsData = (req, res) => {
     try {
       const crud = new Crud(getDBRefVerseApp);
-      crud.getValueAsync('/users', (error, usersData) => {
+      crud.getValueAsync('/cards', (error, usersData) => {
         if (error) return res.status(401).json({ status: 401, message: MESSAGE['401'], errorCode: ERROR_CODES.UNAUTHORIZED });
         if (!usersData) return res.status(404).json({ status: 404, message: MESSAGE['404'], errorCode: ERROR_CODES.DATA_NOT_FOUND });
 
@@ -84,3 +84,7 @@ class Controller {
 }
 
 export default Controller;
+
+function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
